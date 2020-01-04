@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Focus_me.Entities
+{
+    public class Post
+    {
+        public string post_id { get; set; }
+        public string user_id { get; set; }
+        public string user_name { get; set; }
+        public byte[] image_blob { get; set; }
+        public byte[] post_blob { get; set; }
+        public string post_description { get; set; }
+        public int number_of_likes { get; set; }
+        public DateTime date_posted { get; set; }
+    }
+}
