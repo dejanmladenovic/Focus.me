@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Focus_me.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,14 +9,14 @@ namespace Focus_me.Controllers
 {
     public class TestController : Controller
     {
-        // GET: Test
-        public ActionResult Index()
+
+        public ActionResult Test()
         {
-            return View();
-        }
-        public void tester()
-        {
-            Models.test.AddHotel("6");
+            var user = new User();
+
+            user.full_name = "Milos Stankovic";
+
+            return View(user);
         }
     }
 }
