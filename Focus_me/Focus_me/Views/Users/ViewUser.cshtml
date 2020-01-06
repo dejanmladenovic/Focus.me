@@ -1,0 +1,19 @@
+﻿@model Focus_me.Entities.User
+@{
+    ViewBag.Title = "ViewUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{ 
+    MemoryStream memStr = new MemoryStream(Model.image_blob);
+    System.Drawing.Image img = System.Drawing.Image.FromStream(memStr);
+    string imgString = Convert.ToBase64String(Model.image_blob);
+
+}
+
+
+<h2>ViewUser</h2>
+
+<img src="data:image/png;base64, @imgString" />
+

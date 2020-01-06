@@ -1,0 +1,74 @@
+﻿@model Focus_me.Entities.User
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<div class="container">
+
+<div class="card bg-light">
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center">Create Account</h4>
+        <p class="text-center">Get started with your free account</p>
+        <p>
+            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
+            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
+        </p>
+        <p class="divider-text">
+            <span class="bg-light">OR</span>
+        </p>
+        
+        @using (Html.BeginForm("RegisterNewUser", "Users", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                </div>
+                @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime naloga" } })
+                @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                </div>
+                @Html.EditorFor(model => model.full_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime i prezime" } })
+                @Html.ValidationMessageFor(model => model.full_name, "", new { @class = "text-danger" })
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                @Html.EditorFor(model => model.profile_description, new { htmlAttributes = new { @class = "form-control", @placeholder = "Opis profila" } })
+                @Html.ValidationMessageFor(model => model.profile_description, "", new { @class = "text-danger" })
+            </div> <!-- form-group// -->
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                @Html.EditorFor(model => model.user_password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Sifra", @type = "password" } })
+                @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
+            </div> <!-- form-group// -->
+
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                </div>
+                <input type="file" accept="jpg, jpeg, png" id="user_image" name="user_image" />
+            </div> <!-- form-group// -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Kreiraj nalog  </button>
+            </div> <!-- form-group// -->
+            <p class="text-center">Have an account? <a href="">Log In</a> </p>
+        }
+    </article>
+</div> <!-- card.// -->
+
+</div> 
+<!--container end.//-->
