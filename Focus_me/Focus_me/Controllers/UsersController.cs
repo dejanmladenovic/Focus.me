@@ -86,20 +86,33 @@ namespace Focus_me.Controllers
         }
 
         [System.Web.Mvc.HttpGet]
-        public ActionResult Followers(string username)
+        public ActionResult LoadProfile(string id)
         {
+            ISession session = SessionManager.GetSession();
 
-            return View();
-        }
+            if(session == null)
+                return null;
 
-        public ActionResult Followers()
-        {
-            return View();
-        }
+            var st = session.Prepare("select * from user where id = ?");
+            var statement = st.Bind(id);
+            Row u = session.Execute(statement).FirstOrDefault();
+            if (u == null)
+            {
+                return null;
+            }
 
-        public ActionResult Following()
-        {
-            return View();
+            User user = new User()
+            {
+                id = u["id"].ToString(),
+                full_name = u["full_name"].ToString(),
+                image_blob = (byte[])u["image_blob"],
+                user_name = u["user_name"].ToString(),
+                profile_description = u["profile_description"].ToString(),
+                number_of_followers = (int)u["number_of_followers"],
+                number_of_following = (int)u["number_of_following"],
+                number_of_posts = (int)u["number_of_posts"]
+            };
+            return View((object)user);
         }
     }
 }

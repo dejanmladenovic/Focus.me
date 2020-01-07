@@ -1,0 +1,59 @@
+﻿@model Focus_me.Entities.User
+@{
+    ViewBag.Title = "LoadProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    MemoryStream memStr = new MemoryStream(Model.image_blob);
+    System.Drawing.Image img = System.Drawing.Image.FromStream(memStr);
+    string imgString = Convert.ToBase64String(Model.image_blob);
+
+}
+
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="~/Content/profile.css">
+<div class="container profile">
+    <div class="row">
+        <div class="span12">
+            <div class="well well-small clearfix">
+                <div class="row-fluid">
+                    <div class="span2">
+                        <img src="data:image/png;base64, @imgString" class="img-polaroid" />
+                    </div>
+                    <div class="span4">
+                        <h2>@Model.full_name</h2>
+                        <h5>@Model.profile_description</h5>
+                        <h6>Korisnicko ime: <b>@Model.user_name</b></h6>
+                    </div>
+                    <div class="span6">
+                        <ul class="inline stats">
+                            <li>
+                                <span>@Model.number_of_following</span>
+                                Pratioci
+                            </li>
+                            <li>
+                                <span>@Model.number_of_followers</span>
+                                Pratite
+                            </li>
+                            <li>
+                                <span>@Model.number_of_posts</span>
+                                Objave
+                            </li>
+                        </ul>
+                        <div>
+                            <!--/span6-->
+                        </div><!--/row-->
+                    </div>
+                    <!--Body content-->
+                </div>
+            </div>
+
+            <div class="well clearfix">
+
+
+
+
+            </div>
+        </div>
