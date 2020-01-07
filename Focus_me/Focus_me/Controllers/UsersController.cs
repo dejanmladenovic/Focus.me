@@ -84,5 +84,22 @@ namespace Focus_me.Controllers
             };
             return View((object)user);
         }
+
+        [System.Web.Mvc.HttpGet]
+        public ActionResult Followers(string username)
+        {
+
+            return View();
+        }
+
+        public ActionResult Followers()
+        {
+            return View();
+        }
+
+        public ActionResult Following()
+        {
+            return View();
+        }
     }
 }

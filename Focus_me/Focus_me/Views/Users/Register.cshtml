@@ -23,7 +23,7 @@
         <p class="divider-text">
             <span class="bg-light">OR</span>
         </p>
-        
+
         @using (Html.BeginForm("RegisterNewUser", "Users", FormMethod.Post, new { @enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
