@@ -15,7 +15,7 @@ namespace Focus_me
             if (session == null)
             {
                 Cluster cluster = Cluster.Builder().AddContactPoint("127.0.0.1").Build();
-                session = cluster.Connect("focus_me");
+                session = cluster.Connect("Focus_me");
             }
 
             return session;

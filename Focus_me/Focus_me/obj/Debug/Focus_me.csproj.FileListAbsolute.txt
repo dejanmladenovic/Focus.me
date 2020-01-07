@@ -349,3 +349,9 @@ C:\Fax\Napredne Baze Podataka\Projekti\Focus.me\Focus_me\Focus_me\obj\Debug\Focu
 C:\Fax\Napredne Baze Podataka\Projekti\Focus.me\Focus_me\Focus_me\obj\Debug\Focus_me.csproj.CopyComplete
 C:\Fax\Napredne Baze Podataka\Projekti\Focus.me\Focus_me\Focus_me\obj\Debug\Focus_me.dll
 C:\Fax\Napredne Baze Podataka\Projekti\Focus.me\Focus_me\Focus_me\obj\Debug\Focus_me.pdb
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Net.Http.Formatting.dll
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Web.Http.dll
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Web.Http.WebHost.dll
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Net.Http.Formatting.xml
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Web.Http.xml
+E:\fax\IV godina\VII semestar\Napredne baze podataka\projekat 2 git\Focus.me\Focus_me\Focus_me\bin\System.Web.Http.WebHost.xml
