@@ -6,6 +6,10 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Focus_me.Entities;
 using Cassandra;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace Focus_me.Controllers
 {
@@ -21,49 +25,55 @@ namespace Focus_me.Controllers
         {
             return View();
         }
-
+        [ValidateAntiForgeryToken]
         [System.Web.Mvc.HttpPost]
         public string RegisterNewUser([FromBody]User user)
         {
             ISession session = SessionManager.GetSession();
 
             if (session == null)
-                return "Problem u kreiranju sesije";
+                return "Session error";
 
-            string newUserId = System.Guid.NewGuid().ToString();
-            HttpPostedFileBase user_image = Request.Files["user_image"];
+            HttpPostedFileBase user_image = Request.Files["user_image_blob"];
+            
             byte[] user_image_blob = null;
             if (user_image != null)
             {
+                if (user_image.ContentType != "image/jpeg")
+                {
+                    return "file format error";
+                }
                 user_image_blob = new byte[user_image.ContentLength];
                 user_image.InputStream.Read(user_image_blob, 0, user_image.ContentLength);
             }
-
-            var st = session.Prepare("insert into \"user\" (\"id\",image_blob, user_name, full_name, profile_description, user_password, number_of_followers, number_of_following, number_of_posts)" +
-                                            "values (?,?,?,?,?,?,0,0,0)");
-            var statement = st.Bind(newUserId, user_image_blob, user.user_name, user.full_name, user.profile_description, user.user_password);
+            if(user.profile_description == null)
+            {
+                user.profile_description = "";
+            }
+            var st = session.Prepare("insert into \"user\" (\"id\",user_image_blob, user_name, full_name, profile_description, user_password, number_of_followers, number_of_following, number_of_posts)" +
+                                            "values (uuid(),?,?,?,?,?,0,0,0)");
+            var statement = st.Bind(user_image_blob, user.user_name, user.full_name, user.profile_description, user.user_password);
 
             RowSet newUser = session.Execute(statement);
             if (newUser.IsFullyFetched)
             {
-                Session["user_id"] = newUserId;
-                return "Uspesno upisan korisnik.";
+                return "success.";
             }
             else
             {
-                return "Doslo je do greske kod upisa.";
+                return "Writing error.";
             }
         }
         [System.Web.Mvc.HttpGet]
-        public ActionResult ViewUser(string username)
+        public ActionResult ViewUser(string user_name)
         {
             ISession session = SessionManager.GetSession();
 
             if (session == null)
                 return null;
 
-            var st = session.Prepare("select * from user where id = ?");
-            var statement = st.Bind(username);
+            var st = session.Prepare("select * from user where user_name = ?");
+            var statement = st.Bind(user_name);
 
             Row u = session.Execute(statement).FirstOrDefault();
             if(u == null)
@@ -73,7 +83,7 @@ namespace Focus_me.Controllers
 
             User user = new User()
             {
-                id = u["id"].ToString(),
+                id = (System.Guid)u["id"],
                 full_name = u["full_name"].ToString(),
                 image_blob = (byte[])u["image_blob"],
                 user_name = u["user_name"].ToString(),
@@ -85,34 +95,40 @@ namespace Focus_me.Controllers
             return View((object)user);
         }
 
-        [System.Web.Mvc.HttpGet]
-        public ActionResult LoadProfile(string id)
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [ValidateAntiForgeryToken]
+        [System.Web.Mvc.HttpPost]
+        public string LoginIfValid()
         {
             ISession session = SessionManager.GetSession();
 
-            if(session == null)
-                return null;
+            if (session == null)
+                return "DB error";
 
-            var st = session.Prepare("select * from user where id = ?");
-            var statement = st.Bind(id);
+            string username = Request["user_name"];
+            string password = Request["user_password"];
+            var st = session.Prepare("select * from user where user_name = ? and user_password = ? ALLOW FILTERING");
+            var statement = st.Bind(username, password);
+
             Row u = session.Execute(statement).FirstOrDefault();
             if (u == null)
             {
-                return null;
+                return "error";
             }
-
-            User user = new User()
+            else
             {
-                id = u["id"].ToString(),
-                full_name = u["full_name"].ToString(),
-                image_blob = (byte[])u["image_blob"],
-                user_name = u["user_name"].ToString(),
-                profile_description = u["profile_description"].ToString(),
-                number_of_followers = (int)u["number_of_followers"],
-                number_of_following = (int)u["number_of_following"],
-                number_of_posts = (int)u["number_of_posts"]
-            };
-            return View((object)user);
+                Session["user_name"] = u["user_name"];
+                Session["user_id"] = u["id"];
+                Session["user_image_blob"] = ((byte[])u["user_image_blob"]);
+                return "success";
+            }
         }
+
+        
+        
     }
 }

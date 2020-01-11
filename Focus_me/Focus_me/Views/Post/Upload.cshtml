@@ -1,0 +1,50 @@
+﻿@model Focus_me.Entities.User
+@{
+    ViewBag.Title = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/compressor")
+}
+<script type="module" src="~/Scripts/Photos.js"></script>
+
+
+<div class="upload-page row">
+    @using (Html.BeginForm("UploadPost", "Post", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "post-upload-form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="container file-field-container display-table">
+
+            <div class="row display-table-cell">
+                <div class="col text-align-center">
+                    <button class="btn btn-primary input-hider" type="button">
+                        <span>Odaberite fotografiju</span>
+                        <input type="file" accept="jpg,png,jpeg" id="post_image_blob" name="post_image_blob" />
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="container upload-info-container" id="post-info">
+            <div class="row">
+                <canvas id="image-canvas">
+                </canvas>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <textarea rows="5" id="post-description" name="post_description"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn-primary btn" disabled="true">Otpremi</button>
+            </div>
+        </div>
+    }
+</div>
+<script src="~/Scripts/Forms.js"></script>
+<script>
+    validateAndSubmitForm("#post-upload-form", 900);
+</script>
+

@@ -7,7 +7,7 @@ namespace Focus_me.Entities
 {
     public class User
     {
-        public string id { get; set; }
+        public System.Guid id { get; set; }
         public string user_name { get; set; }
         public byte[] image_blob { get; set; }
         public string full_name { get; set; }

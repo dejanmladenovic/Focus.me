@@ -16,12 +16,7 @@
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
+
 
 /*REGISTRATION FORM*/
 
@@ -32,22 +27,22 @@ textarea {
     margin-bottom: 15px;
 }
 
-    .divider-text span {
-        padding: 7px;
-        font-size: 12px;
-        position: relative;
-        z-index: 2;
-    }
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+}
 
-    .divider-text:after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        border-bottom: 1px solid #ddd;
-        top: 55%;
-        left: 0;
-        z-index: 1;
-    }
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
 
 .btn-facebook {
     background-color: #405D9D;
@@ -57,4 +52,77 @@ textarea {
 .btn-twitter {
     background-color: #42AEEC;
     color: #fff;
+}
+
+.card-body{
+    margin: 0 auto;
+}
+
+.form-group{
+    width: 100%;
+}
+
+.text-align-center{
+    text-align: center;
+}
+
+.upload-page form{
+    height: 100%;
+}
+
+.file-field-container {
+    height: 100%;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+}
+
+
+.upload-info-container {
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.upload-info-container canvas{
+    width: 100%;
+}
+
+.upload-info-container textarea{
+    width: 100%;
+}
+
+.display-table{
+    display: table;
+}
+
+.display-table-cell{
+    display: table-cell;
+    vertical-align:middle;
+}
+
+.input-hider{
+    position:relative;
+}
+
+.input-hider span{
+    color: #fff;
+    text-align:center;
+}
+
+.input-hider input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+}
+
+.expand-height {
+    max-height: 1500px;
+}
+
+.file-field-container{
+
 }

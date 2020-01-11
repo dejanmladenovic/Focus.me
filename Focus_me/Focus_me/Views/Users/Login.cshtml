@@ -1,0 +1,60 @@
+﻿@model Focus_me.Entities.User
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<div class="container">
+
+    <div class="card bg-light">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Ulogujte se</h4>
+            <p>
+                <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Ulogujte se putem Twitter-a</a>
+                <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Ulogujte se putem facebook-a</a>
+            </p>
+            <p class="divider-text">
+                <span class="bg-light">ili</span>
+            </p>
+
+            @using (Html.BeginForm("LoginIfValid", "Users", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "login-form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                    </div>
+                    @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime naloga", @required="" } })
+                    @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
+                </div> <!-- form-group// -->
+
+
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    @Html.EditorFor(model => model.user_password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Sifra", @type = "password", @required="" } })
+                    @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
+                </div> <!-- form-group// -->
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Ulogujte se </button>
+                </div> <!-- form-group// -->
+                <p class="text-center">Nemate nalog? <a href="@Url.Action("Register", "Users", null, Request.Url.Scheme)">Kreirajte ga ovde!</a> </p>
+            }
+        </article>
+    </div> <!-- card.// -->
+
+</div>
+<script src="~/Scripts/Forms.js"></script>
+<script>
+    validateAndSubmitForm("#login-form");
+</script>
+<!--container end.//-->

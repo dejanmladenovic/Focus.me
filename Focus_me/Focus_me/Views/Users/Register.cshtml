@@ -7,6 +7,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/compressor")
 }
 
 
@@ -14,31 +15,30 @@
 
 <div class="card bg-light">
     <article class="card-body mx-auto" style="max-width: 400px;">
-        <h4 class="card-title mt-3 text-center">Create Account</h4>
-        <p class="text-center">Get started with your free account</p>
+        <h4 class="card-title mt-3 text-center">Kreirajte Vaš nalog</h4>
         <p>
-            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Login via Twitter</a>
-            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Login via facebook</a>
+            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>   Ulogujte se putem Twitter-a</a>
+            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>   Ulogujte se putem facebook-a</a>
         </p>
         <p class="divider-text">
-            <span class="bg-light">OR</span>
+            <span class="bg-light">ili</span>
         </p>
 
-        @using (Html.BeginForm("RegisterNewUser", "Users", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("RegisterNewUser", "Users", FormMethod.Post, new { @enctype = "multipart/form-data", @id="registration-form" }))
         {
             @Html.AntiForgeryToken()
             <div class="form-group input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-user"></i> </span>
                 </div>
-                @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime naloga" } })
+                @Html.EditorFor(model => model.user_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime naloga", @required="" } })
                 @Html.ValidationMessageFor(model => model.user_name, "", new { @class = "text-danger" })
             </div> <!-- form-group// -->
             <div class="form-group input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
                 </div>
-                @Html.EditorFor(model => model.full_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime i prezime" } })
+                @Html.EditorFor(model => model.full_name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Ime i prezime", @required="" } })
                 @Html.ValidationMessageFor(model => model.full_name, "", new { @class = "text-danger" })
             </div> <!-- form-group// -->
             <div class="form-group input-group">
@@ -52,7 +52,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                 </div>
-                @Html.EditorFor(model => model.user_password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Sifra", @type = "password" } })
+                @Html.EditorFor(model => model.user_password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Sifra", @type = "password", @required="" } })
                 @Html.ValidationMessageFor(model => model.user_password, "", new { @class = "text-danger" })
             </div> <!-- form-group// -->
 
@@ -60,15 +60,43 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                 </div>
-                <input type="file" accept="jpg, jpeg, png" id="user_image" name="user_image" />
+                <input type="file" accept=".jpg, .jpeg" id="user_image" name="user_image_blob" />
             </div> <!-- form-group// -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block"> Kreiraj nalog  </button>
             </div> <!-- form-group// -->
-            <p class="text-center">Have an account? <a href="">Log In</a> </p>
+            <p class="text-center">Imate nalog? <a href="@Url.Action("Login", "Users", null, Request.Url.Scheme)">Ulogujte se</a> </p>
         }
     </article>
 </div> <!-- card.// -->
-
+    <script src="~/Scripts/Forms.js"></script>
+    <script>
+        validateAndSubmitForm("#registration-form", 900);
+        $("#user_image").on("change", function () {
+            const file = this.files[0];
+            if (file.type == "image/jpeg") {
+                if (file.size > 3 * 1024 * 1024) {
+                    alert("Previse veliki dokument");
+                    return;
+                }
+                $("#registration-form button[type='submit']").prop("disabled", true);
+                const fieldName = this.name;
+                new Compressor(file, {
+                    quality: 0.7,
+                    convertSize: 0,
+                    width: 200,
+                    success(result) {
+                        globalFile.name = fieldName;
+                        globalFile.value = result;
+                        $("#registration-form button[type='submit']").prop("disabled", false);
+                    }
+                })
+                }
+                else {
+                    alert("tip dokumenta nije podrzan");
+                    return;
+                }
+        })
+    </script>
 </div> 
 <!--container end.//-->
