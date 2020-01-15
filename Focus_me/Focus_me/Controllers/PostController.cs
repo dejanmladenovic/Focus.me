@@ -59,13 +59,13 @@ namespace Focus_me.Controllers
 
             System.Guid newID = System.Guid.NewGuid();
 
-            var st = session.Prepare("insert into \"post\" (\"post_id\",date_posted, user_image_blob, post_blob, post_blob_thumbnail, post_description, user_name)" +
-                                            "values (now(), ?, ?, ?, ?, ?, ?)");
+            var st = session.Prepare("insert into \"post\" (\"post_id\", user_image_blob, post_blob, post_blob_thumbnail, post_description, user_name)" +
+                                            "values (now(), ?, ?, ?, ?, ?)");
             var st2 = session.Prepare("UPDATE user_stats SET number_of_posts = number_of_posts + 1 " +
                                         "WHERE user_name = ?; ");
 
             
-            var statement = st.Bind( DateTime.Now, (byte[])Session["user_image_blob"], post_image_blob, post_image_blob_thumbnail, post.post_description, Session["user_name"].ToString());
+            var statement = st.Bind((byte[])Session["user_image_blob"], post_image_blob, post_image_blob_thumbnail, post.post_description, Session["user_name"].ToString());
             var statement2 = st2.Bind(Session["user_name"].ToString());
             var batch = new BatchStatement().Add(statement);
 

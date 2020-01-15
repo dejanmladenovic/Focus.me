@@ -30,7 +30,6 @@ function validateAndSubmitForm(formID) {
             }    
         }
         var redirectTo = form.attr("redirect");
-        console.log(globalFiles);
         sendFormData();
         function sendFormData() {
             $.ajax({
@@ -44,7 +43,7 @@ function validateAndSubmitForm(formID) {
                         if (redirectTo == "refresh")
                             location.reload();
                         else
-                            window.location.href = window.location.href;
+                            window.location.href = redirectTo;
                     }
                     else {
                         alert(data);

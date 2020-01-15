@@ -159,8 +159,9 @@
     overflow: hidden;
 }
 
-.follower-image img{
-    width: 100%;
+.follower-image .user-image-wrapper {
+    width: 60px;
+    height: 60px;
 }
 
 .follower-information {

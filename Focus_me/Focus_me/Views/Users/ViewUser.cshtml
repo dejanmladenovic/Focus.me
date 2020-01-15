@@ -47,30 +47,32 @@
                             <div class="col-xs-3">
                                 @{ if (Session["user_name"] != null)
                                     {
-                                        if (Model.amIaFollower(Session["user_name"].ToString(), Model.user_name))
+                                        if (!Session["user_name"].ToString().Equals(Model.user_name))
                                         {
-                                            if (Model.image_blob != null)
+                                            if (Model.amIaFollower(Session["user_name"].ToString(), Model.user_name))
                                             {
-                                                <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="UnfollowUser">Otprati</button>
-                                            }
-                                            else
-                                            {
-                                                <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="UnfollowUser">Otprati</button>
-                                            }
+                                                if (Model.image_blob != null)
+                                                {
+                                                    <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="UnfollowUser">Otprati</button>
+                                                }
+                                                else
+                                                {
+                                                    <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="UnfollowUser">Otprati</button>
+                                                }
 
-                                        }
-                                        else
-                                        {
-                                            if (Model.image_blob != null)
-                                            {
-                                                <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="FollowUser">Zaprati</button>
                                             }
                                             else
                                             {
-                                                <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="FollowUser">Zaprati</button>
+                                                if (Model.image_blob != null)
+                                                {
+                                                    <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="FollowUser">Zaprati</button>
+                                                }
+                                                else
+                                                {
+                                                    <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="FollowUser">Zaprati</button>
+                                                }
                                             }
                                         }
-                                        
                                     }
                                 }
                             </div>
