@@ -10,6 +10,7 @@
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
     <link href="~/Content/css/jquery-ui.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/53895cabbb.js" crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -21,18 +22,34 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Aplication name", "Test", "Test", new { area = "" }, new { @class = "navbar-brand" })
+                <a href="/"><span class="logo-text">Focus.Me</span></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Registration", "Register", "Users")</li>
+                    <li>@Html.ActionLink("Početna", "Index", "Home")</li>
+                    @{ if (Session["user_name"] == null)
+                        {
+                            <li>@Html.ActionLink("Registracija", "Register", "Users")</li>
+                            <li>@Html.ActionLink("Prijava", "Login", "Users")</li>
+                        }
+                        else
+                        {
+                            <li><a href="/user/@Session["user_name"].ToString()">Moj nalog</a></li>
+                            <li>@Html.ActionLink("Objavi", "Upload", "Post")</li>
+                            <li>@Html.ActionLink("Izloguj se", "Logout", "Users")</li>
+                        }
+                    }
+                    <li class="search-bar">
+                        <input type="text" id="search-bar" /><button type="button" id="search-button" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                    </li>
                 </ul>
             </div>
+
         </div>
     </div>
+
+
+
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -44,5 +61,13 @@
     @*@Scripts.Render("~/bundles/jquery")*@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $("#search-button").on("click", function () {
+                window.location.href = "/user/" + $("#search-bar").val().toLowerCase();
+            })
+        })
+    </script>
 </body>
 </html>

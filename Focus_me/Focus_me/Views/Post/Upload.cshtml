@@ -12,7 +12,7 @@
 
 
 <div class="upload-page row">
-    @using (Html.BeginForm("UploadPost", "Post", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "post-upload-form" }))
+    @using (Html.BeginForm("UploadPost", "Post", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "post-upload-form", @redirect="/user/"+Session["user_name"] }))
     {
         @Html.AntiForgeryToken()
         <div class="container file-field-container display-table">

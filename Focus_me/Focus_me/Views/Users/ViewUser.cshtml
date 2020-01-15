@@ -5,15 +5,197 @@
 }
 
 
-@{ 
-    MemoryStream memStr = new MemoryStream(Model.image_blob);
-    System.Drawing.Image img = System.Drawing.Image.FromStream(memStr);
-    string imgString = Convert.ToBase64String(Model.image_blob);
+@{
+    string imgString = null;
+    if (Model.image_blob != null)
+    {
+        imgString = Convert.ToBase64String(Model.image_blob);
+    }
+    else
+    {
+        imgString = "/resources/user.jpg";
+    }
+
 
 }
 
+<input type="hidden" id="user_name" value="@Model.user_name" />
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-2">
+                        @if (Model.image_blob != null)
+                        {
+                            <div class="user-image-wrapper" style="background-image: url('data:image/jpeg;base64,@imgString')">
+                                </div>
+                        }
+                        else
+                        {
+                                <div class="user-image-wrapper" style="background-image: url('@imgString')">
+                                    </div>
+                        }
+                    </div>
 
-<h2>ViewUser</h2>
+                    <div class="col-xs-10">
+                        <div class="row">
+                            <div class="col-xs-9 profile-information">
+                                <h4>@Model.user_name</h4>
+                                <h3>@Model.full_name</h3>
+                            </div>
+                            <div class="col-xs-3">
+                                @{ if (Session["user_name"] != null)
+                                    {
+                                        if (Model.amIaFollower(Session["user_name"].ToString(), Model.user_name))
+                                        {
+                                            if (Model.image_blob != null)
+                                            {
+                                                <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="UnfollowUser">Otprati</button>
+                                            }
+                                            else
+                                            {
+                                                <button id="follow-unfollow" type="button" class="btn btn-secondary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="UnfollowUser">Otprati</button>
+                                            }
 
-<img src="data:image/jpeg;base64, @imgString" />
+                                        }
+                                        else
+                                        {
+                                            if (Model.image_blob != null)
+                                            {
+                                                <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" following_image_blob="@Convert.ToBase64String(Model.image_blob)" target="FollowUser">Zaprati</button>
+                                            }
+                                            else
+                                            {
+                                                <button id="follow-unfollow" type="button" class="btn btn-primary" following_user_name="@Model.user_name" following_full_name="@Model.full_name" target="FollowUser">Zaprati</button>
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4 user-stats text-align-center user-stats-btn is-clickable" modal-target="UserFollowers" modal-title="Korisnici koji prate @Model.full_name">
+                                <h4>Broj pratioca</h4>
+                                <h4 id="number-of-followers">@Model.number_of_followers</h4>
+                            </div>
+                            <div class="col-xs-4 user-stats text-align-center user-stats-btn is-clickable" modal-target="UserFollowing" modal-title="Korisnici koje prati @Model.full_name">
+                                <h4>Prati</h4>
+                                <h4>@Model.number_of_following</h4>
+                            </div>
+                            <div class="col-xs-4 user-stats text-align-center">
+                                <h4>Broj objava</h4>
+                                <h4>@Model.number_of_posts</h4>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col profile-description">
+                        <p>@Html.Raw(Model.profile_description.Replace("\r\n", "<br/>"))</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="user_images">
+
+    </div>
+    <div class="row">
+        <div class="col text-align-center" id="images-loader">
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="followers-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followers-modal-tittle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Session["user_name"] != null && Model.user_name.ToString().Equals(Session["user_name"].ToString()))
+{
+    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="followers-modal-tittle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm("UpdateUser", "Users", FormMethod.Post, new { @id = "update-form", @redirect = "refresh" }))
+                {
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <label>Puno ime i prezime</label>
+                        <input type="text" id="full_name" name="full_name" value="@Model.full_name" />
+                        <label>Opis profila</label>
+                        <textarea id="profile_description" name="profile_description">
+                                @if(Model.profile_description != null)
+                                {
+                                    @Model.profile_description;
+                                }
+                            </textarea>
+                        <label>Profilna slika</label>
+                        <input type="file" accept="jpg" id="user_image_blob" name="user_image_blob" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/Forms.js"></script>
+    <script>
+        validateAndSubmitForm("#update-form");
+        $("#user_image_blob").on("change", function () {
+            const file = this.files[0];
+            if (file.type == "image/jpeg") {
+                if (file.size > 3 * 1024 * 1024) {
+                    alert("Previse veliki dokument");
+                    return;
+                }
+                $("#update-form button[type='submit']").prop("disabled", true);
+                const fieldName = this.name;
+                new Compressor(file, {
+                    quality: 0.7,
+                    convertSize: 0,
+                    width: 200,
+                    success(result) {
+                        globalFile = true;
+                        globalFiles.push({ name: fieldName, value: result });
+                        $("#update-form button[type='submit']").prop("disabled", false);
+                    }
+                })
+            }
+            else {
+                alert("tip dokumenta nije podrzan");
+                return;
+            }
+        })
+    </script>
+}
+
+<script src="~/Scripts/User.js"></script>

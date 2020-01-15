@@ -1,0 +1,141 @@
+﻿@model Focus_me.Entities.Post
+@{
+    ViewBag.Title = "GetSinglePost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="post-single-header row">
+        <a href="/user/@Model.user_name">
+            @{  if (Model.user_image_blob != null)
+                {
+                    <div class="user-image-wrapper" style="background-image: url('data:image/jpeg;base64,@Convert.ToBase64String(Model.user_image_blob)')">
+                    </div>
+                }
+                else
+                {
+                    <div class="user-image-wrapper" style="background-image: url('/Resources/user.jpg')">
+                    </div>
+                }
+            }
+            <h4>@Model.user_name</h4>
+        </a>
+    </div>
+    <div class="row">
+        <div class="post-single-image-wrapper">
+            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.post_blob)" />
+        </div>
+    </div>
+    <div class="row post-single-information">
+        @{
+            if (Session["user_name"] != null && Session["user_name"].ToString() == Model.user_name)
+            {
+                <div class="col options-dropdown">
+                    <div class="btn-group dropleft ">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Opcije
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="dropdown-item" data-toggle="modal" data-target="#edit-post"><a href="#">Izmeni</a></li>
+                            <li class="dropdown-item" user_name="@Model.user_name" post_id="@Model.post_id" id="delete-post-btn" onclick="deletePost(this)"><a href="#">Izbrisi</a> </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        }
+        <div class="col">
+            <div class="row post-single-likes-date">
+                <div class="col-xs-8">
+                    <div id="see-post-likes" post_id="@Model.post_id.ToString()">
+                        <span><strong id="post-likes-@Model.post_id">@Model.number_of_likes</strong> sviđanja</span>
+                        <span>@Model.date_posted.ToShortDateString()</span>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-4">
+                    @{
+                        if (Model.did_i_like)
+                        {
+                            <div class="post-single-like-button" id="like-button" logged-in="@Session["user_name"].ToString()" post-id="@Model.post_id" target="UnlikePost"><i class="fas fa-heart"></i></div>
+                        }
+                        else if (Session["user_name"] != null)
+                        {
+                            <div class="post-single-like-button" id="like-button" logged-in="@Session["user_name"].ToString()" post-id="@Model.post_id" target="LikePost"><i class="far fa-heart"></i></div>
+                        }
+                        else
+                        {
+                            <div class="post-single-like-button" id="like-button"><i class="far fa-heart"></i></div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col post-single-description">
+            @{
+                if (Model.post_description != null)
+                {
+                    <p>@Html.Raw(Model.post_description.Replace("\r\n", "<br/>"))</p>
+                }
+            }
+        </div>
+        <script src="~/Scripts/Post.js"></script>
+    </div>
+</div>
+
+<div class="modal fade" id="followers-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followers-modal-tittle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    if (Session["user_name"] != null && Session["user_name"].ToString() == Model.user_name)
+    {
+        <div class="modal fade" id="edit-post" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="followers-modal-tittle"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @using (Html.BeginForm("UpdatePost", "Post", FormMethod.Post, new { @id = "update-form", @redirect = "refresh" }))
+                    {
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" id="post_id" name="post_id" value="@Model.post_id.ToString()"/>
+                            <textarea id="post_description" name="post_description" rows="15" style="width: 100%">@Model.post_description</textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Sačuvaj</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <script src="~/Scripts/Forms.js"></script>
+        <script>
+            validateAndSubmitForm("#update-form");
+        </script>
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
+    }
+}

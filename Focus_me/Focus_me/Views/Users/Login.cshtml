@@ -24,7 +24,7 @@
                 <span class="bg-light">ili</span>
             </p>
 
-            @using (Html.BeginForm("LoginIfValid", "Users", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "login-form" }))
+            @using (Html.BeginForm("LoginIfValid", "Users", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "login-form", @redirect="/" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="form-group input-group">

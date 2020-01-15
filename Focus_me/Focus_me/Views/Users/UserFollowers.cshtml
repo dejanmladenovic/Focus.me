@@ -1,0 +1,40 @@
+﻿@model List<Focus_me.Entities.Follower>
+
+@{
+    ViewBag.Title = "UserFollowers";
+    Layout = "~/Views/Shared/NoHeader.cshtml";
+}
+
+<div class="container-fluid follower-table">
+
+    @{ foreach(Focus_me.Entities.Follower follower in Model)
+        {
+            string imgString = null;
+            if(follower.follower_image_blob != null)
+            {
+                imgString = Convert.ToBase64String(follower.follower_image_blob);
+            }
+            else
+            {
+                imgString = "/resources/user.jpg";
+            }
+            <div class="row follower-row">
+                <div class="follower-image">
+                    @if (follower.follower_image_blob != null)
+                    {
+                        <img src="data:image/jpeg;base64,@imgString" />
+                    }
+                    else
+                    {
+                        <img src="@imgString" />
+                    }
+                </div>
+                <div class="follower-information">
+                    <h5>@follower.follower_full_name</h5> 
+                    <h6>@follower.follower_user_name</h6>
+                </div>
+            </div>
+        }
+    }
+</div>
+

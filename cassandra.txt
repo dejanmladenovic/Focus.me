@@ -1,0 +1,57 @@
+CREATE TABLE my_followers (
+    user_name text,
+    follower_user_name text,
+    follower_full_name text,
+    follower_image_blob blob,
+    PRIMARY KEY (user_name, follower_user_name)
+);
+
+CREATE TABLE people_i_follow (
+    user_name text,
+    following_user_name text,
+    following_full_name text,
+    following_image_blob blob,
+    PRIMARY KEY (user_name, following_user_name)
+);
+
+CREATE TABLE post (
+    user_name text,
+    post_id timeuuid,
+    number_of_likes int,
+    post_blob blob,
+    post_blob_thumbnail blob,
+    post_description text,
+    user_image_blob blob,
+    PRIMARY KEY (user_name, post_id)
+) WITH CLUSTERING ORDER BY (post_id DESC);
+
+CREATE TABLE post_likes (
+    post_id uuid,
+    user_name text,
+    full_name text,
+    image_blob blob,
+    PRIMARY KEY (post_id, user_name)
+);
+
+CREATE TABLE post_stats (
+    post_id uuid,
+    post_likes counter,
+    PRIMARY KEY (post_id)
+);
+
+CREATE TABLE "user" (
+    user_name text,
+    full_name text,
+    profile_description text,
+    user_image_blob blob,
+    user_password text,
+    PRIMARY KEY (user_name)
+);
+
+CREATE TABLE user_stats (
+    user_name text,
+    number_of_followers counter,
+    number_of_following counter,
+    number_of_posts counter,
+    PRIMARY KEY (user_name)
+);

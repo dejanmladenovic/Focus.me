@@ -46,9 +46,16 @@ $(document).ready(function () {
                 new Compressor(generatedImg, {
                     quality: 0.7,
                     success(result) {
-                        globalFile.name = $("#post_image_blob")[0].name;
-                        globalFile.value = result;
-                        $(".upload-info-container button[type='submit']").prop("disabled", false);
+                        globalFiles.push({ name: $("#post_image_blob")[0].name, value: result })
+                        new Compressor(generatedImg, {
+                            quality: 0.7,
+                            width: 400,
+                            success(smallResult) {
+                                globalFiles.push({ name: $("#post_image_blob")[0].name + "_thumbnail", value: smallResult })
+                                $(".upload-info-container button[type='submit']").prop("disabled", false);
+                            }    
+                        })
+                        globalFile = true;
                     }
                 })
                 $(".upload-info-container").addClass("expand-height");

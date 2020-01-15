@@ -1,6 +1,7 @@
-﻿var globalFile = {name: null, value: null} //for storin image generated insidea canvas
+﻿var globalFile = null //for storin image generated insidea canvas
+var globalFiles = Array();
 
-function validateAndSubmitForm(formID, imagesWidth) {
+function validateAndSubmitForm(formID) {
     const form = $(formID);
     if (form.length == 0) {
         console.log("form not found");
@@ -20,45 +21,17 @@ function validateAndSubmitForm(formID, imagesWidth) {
         for (var i = 0; i < paramsArray.length; i++) {
             formData.append(paramsArray[i].name, paramsArray[i].value);
         }
-        //var fileInputs = form.find("input[type='file']");
         
-        var hasFiles = false;
+        
 
-        if (globalFile.name != null) {
-            formData.append(globalFile.name, globalFile.value);
+        if (globalFile != null) {
+            for (var i = 0; i < globalFiles.length; i++) {
+                formData.append(globalFiles[i].name, globalFiles[i].value);
+            }    
         }
-        /*
-        for (var i = 0; i < fileInputs.length; i++) {
-            if (fileInputs[i].files.length > 0) {
-                hasFiles = true;
-                if (fileInputs[i].files[0].type == "image/jpeg") {
-                    const file = fileInputs[i].files[0];
-                    if (file.size > 3 * 1024 * 1024) {
-                        alert("Previse veliki dokument");
-                        return;
-                    }
-                    const fieldName = fileInputs[i].name;
-                    if (globalFile.name != null && globalFile.name != fieldName) {
-                        formData.append(globalFile.name, globalFile.value);
-                    }
-                    new Compressor(file, {
-                        quality: 0.7,
-                        convertSize: 0,
-                        width: imagesWidth,
-                        success(result) {
-                            formData.append(fieldName, result
-                            sendFormData();
-                        }
-                    })
-                }
-                else {
-                    alert("tip dokumenta nije podrzan");
-                    return;
-                }
-            }
-        }*/
+        var redirectTo = form.attr("redirect");
+        console.log(globalFiles);
         sendFormData();
-        
         function sendFormData() {
             $.ajax({
                 type: "POST",
@@ -67,7 +40,15 @@ function validateAndSubmitForm(formID, imagesWidth) {
                 contentType: false,
                 data: formData, 
                 success: function (data) {
-                    alert(data); 
+                    if (data == "success") {
+                        if (redirectTo == "refresh")
+                            location.reload();
+                        else
+                            window.location.href = window.location.href;
+                    }
+                    else {
+                        alert(data);
+                    }
                 }
             }); 
         }

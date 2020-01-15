@@ -1,0 +1,73 @@
+﻿@model List<Focus_me.Entities.Post>
+@{
+    ViewBag.Title = "FollowingPosts";
+    Layout = "~/Views/Shared/NoHeader.cshtml";
+}
+
+@foreach(Focus_me.Entities.Post post in Model)
+{
+    <div class="col">
+        <div class="post-single-header row">
+            <a href="/user/@post.user_name">
+                @{ if (post.user_image_blob != null)
+                    {
+                        <div class="user-image-wrapper" style="background-image: url('data:image/jpeg;base64,@Convert.ToBase64String(post.user_image_blob)')">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="user-image-wrapper" style="background-image: url('/Resources/user.jpg')">
+                        </div>
+                    }
+                }
+                <h4>@post.user_name</h4>
+            </a>
+        </div>
+        <div class="row">
+            <div class="post-single-image-wrapper">
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.post_blob)" />
+            </div>
+        </div>
+        <div class="row post-single-information">
+            <div class="col">
+                <div class="row post-single-likes-date">
+                    <div class="col-xs-8">
+                        <div id="see-post-likes" onclick="showPostLikes(this)" post_id="@post.post_id.ToString()">
+                            <span><strong id="post-likes-@post.post_id">@post.number_of_likes</strong> sviđanja</span>
+                            <span>@post.date_posted.ToShortDateString()</span>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-4">
+                        @{
+                            if (post.did_i_like)
+                            {
+                                <div class="post-single-like-button" id="like-button" logged-in="@Session["user_name"].ToString()" post-id="@post.post_id" target="UnlikePost" onclick="likeUnlikePost(this)"><i class="fas fa-heart"></i></div>
+                            }
+                            else
+                            {
+                                <div class="post-single-like-button" id="like-button" logged-in="@Session["user_name"].ToString()" post-id="@post.post_id" target="LikePost" onclick="likeUnlikePost(this)"><i class="far fa-heart"></i></div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col post-single-description">
+                @{
+                    if (post.post_description != null)
+                    {
+                        <p>@Html.Raw(post.post_description.Replace("\r\n", "<br/>"))</p>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@if(Session["pagination"] != null)
+{
+    <div class="col text-align-center" id="load-posts-button">
+        <button type="button" class="btn btn-primary" onclick="loadPosts()">Učitaj još objava</button>
+    </div>
+}
